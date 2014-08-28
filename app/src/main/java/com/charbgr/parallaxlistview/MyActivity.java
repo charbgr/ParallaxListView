@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,4 +32,5 @@ public class MyActivity extends Activity {
         mListView.setOnScrollListener(new ParallaxOnScrollListener(R.id.animalPhoto));
 
     }
+
 }

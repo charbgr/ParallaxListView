@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/animalPhoto"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"/>
 
 </FrameLayout>

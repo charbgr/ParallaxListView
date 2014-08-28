@@ -46,4 +46,8 @@ public class CustomListView extends ListView {
         return listviewElementsheight;
     }
 
+
+    public int getReferencePoint() {
+        return referencePoint;
+    }
 }

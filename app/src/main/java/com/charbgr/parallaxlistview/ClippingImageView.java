@@ -58,8 +58,6 @@ public class ClippingImageView extends ImageView {
     }
 
     public void toggle() {
-
-
         final float[] values = clipEqualsBounds() ? new float[]{0f, 0.5f} : new float[]{0.5f, 0f};
         ObjectAnimator.ofFloat(this, "translationY", values).start();
     }
@@ -73,7 +71,9 @@ public class ClippingImageView extends ImageView {
         // nothing to do if no dimensions are known yet
         final int width = getWidth();
         final int height = getHeight();
-        if (width <= 0 || height <= 0) return;
+        if (width <= 0 || height <= 0) {
+            return;
+        }
 
         // construct the clip bounds based on the supplied 'value' (which is assumed to be within the range [0...1])
         final int clipHeight = (int) (value * height);
@@ -87,22 +87,27 @@ public class ClippingImageView extends ImageView {
 
     }
 
-    private int factor = 3;
     private int currentTop;
     private int currentBottom;
 
+    //direction
     public static final int UP = -1;
     public static final int DOWN = 1;
 
-    public void move(int upDownIndicator) {
+    public void move(int direction, int aFactor) {
 
-        if(currentTop <= 0) return;
-        if(currentBottom >= getHeight()) return;
+        if (direction == UP && currentTop <= 0) {
+            return;
+        }
 
-        int mFactor = factor * upDownIndicator;
+        if (direction == DOWN && currentBottom >= getHeight()) {
+            return;
+        }
 
-        currentTop = currentTop + mFactor;
-        currentBottom =  currentBottom + mFactor;
+        int factor = aFactor * direction;
+
+        currentTop = currentTop + factor ;
+        currentBottom = currentBottom + factor ;
 
         mClipRect.set(0, currentTop, getWidth(), currentBottom);
         invalidate();

@@ -1,10 +1,7 @@
 package com.charbgr.parallaxlistview;
 
-import android.os.AsyncTask;
 import android.view.View;
 import android.widget.AbsListView;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by charbgr on 7/24/14.
@@ -17,19 +14,19 @@ public class ParallaxOnScrollListener implements AbsListView.OnScrollListener {
 
     private static int clippingImageViewId;
 
-    public ParallaxOnScrollListener(int clippingImageViewId){
+    public ParallaxOnScrollListener(int clippingImageViewId) {
         this.clippingImageViewId = clippingImageViewId;
     }
 
 
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
+    }
 
     /**
      * Callback method to be invoked when the list or grid has been scrolled. This will be
      * called after the scroll has completed
      *
-     * @param view             The view whose scroll state is being reported
+     * @param absListView      The view whose scroll state is being reported
      * @param firstVisibleItem the index of the first visible cell (ignore if
      *                         visibleItemCount == 0)
      * @param visibleItemCount the number of visible cells
@@ -61,32 +58,36 @@ public class ParallaxOnScrollListener implements AbsListView.OnScrollListener {
 
 
         if (view != null) {
-            if (mIsScrollingUp) {
-                System.out.println("scrolling up");
-                translateAllViewsUp(absListView, firstVisibleItem, totalItemCount);
-            } else {
-                System.out.println("falling down");
-                translateAllViewsDown(absListView, firstVisibleItem, totalItemCount);
-            }
+            translateAllViews(absListView, firstVisibleItem, visibleItemCount,
+                    mIsScrollingUp ? ClippingImageView.UP : ClippingImageView.DOWN);
         }
     }
 
-    public void translateAllViewsUp(AbsListView absListView, int firstVisibleItem, int lastVisibleItems) {
-        for(int i = firstVisibleItem; i < lastVisibleItems; ++i) {
-            final View view = absListView.getChildAt(i);
-            if (view != null) {
-                ((ClippingImageView) view.findViewById(clippingImageViewId))
-                        .move(ClippingImageView.UP);
-            }
-        }
-    }
+    private void translateAllViews(AbsListView absListView,
+                                         int firstVisibleItem,
+                                         int lastVisibleItems,
+                                         int direction) {
 
-    public void translateAllViewsDown(AbsListView absListView, int firstVisibleItem, int lastVisibleItems) {
-        for(int i = firstVisibleItem; i < lastVisibleItems; ++i) {
+        int referencePoint = ((CustomListView)absListView).getReferencePoint();
+
+        for (int i = firstVisibleItem; i < lastVisibleItems; ++i) {
             final View view = absListView.getChildAt(i);
+
+            int coords[] = new int[2];
+            view.getLocationOnScreen(coords);
+
+            int y = coords[1];
+            int factor;
+
+            // must calculate it right
+            if(y+200 < referencePoint)
+                factor = 1;
+            else
+                factor = 5;
+
             if (view != null) {
                 ((ClippingImageView) view.findViewById(clippingImageViewId))
-                        .move(ClippingImageView.DOWN);
+                        .move(direction, factor);
             }
         }
     }
